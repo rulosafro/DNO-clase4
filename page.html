@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Diseño y nuevos medios, segunda versión remota" />
+        <title>DNO037vR2 &#129302;</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <nav>
+                <p><a href="index.html">Portada</a> <a href="page.html?ej=1">Taylor Swift</a> <a href="page.html?ej=2">Citas</a> <a href="page.html?ej=3">NASA2</a></p>
+            </nav>
+            <main>
+                <div></div>
+                <div></div>
+            </main>
+            <footer>
+                <p><a href="#">Javier Ramírez</a> <a href="#">DNO037</a></p>
+            </footer>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.min.js"></script>
+        <script>
+            var url = new URLSearchParams(window.location.search);
+            var seleccionado = url.get("ej");
+            var data;
+            var date;
+
+            var texto = document.querySelector("main").getElementsByTagName("div")[0];
+            var imagen = document.querySelector("main").getElementsByTagName("div")[1];
+
+            if (seleccionado == 1) {
+                function preload() {
+                    data = loadJSON("https://api.taylor.rest/");
+                }
+            } else if (seleccionado == 2) {
+                function preload() {
+                    data = loadJSON("https://gist.githubusercontent.com/natebass/b0a548425a73bdf8ea5c618149fe1fce/raw/f4231cd5961f026264bb6bb3a6c41671b044f1f4/quotes.json");
+                }
+            } else if (seleccionado == 3) {
+                function preload() {
+                    // Genera tu propia API Key en https://api.nasa.gov/
+                    // Cambia "DEMO_KEY" por la API Key generada
+                    // Cambia la fecha de la consulta, puedes partir en 1995-6-16 y llegar hasta hoy mismo
+                    // Nota que la api ofrece un texto de "explanation" y la "url" de una imagen
+
+                    data = loadJSON("https://api.nasa.gov/planetary/apod?api_key=nlI3U0T5R6IUPEfTJzeQ9acznAEeaFHcVpOwmiap");
+                }
+            } else {
+                data = "Algo salió mal";
+            }
+            function setup() {
+                noCanvas();
+                if (seleccionado == 1) {
+                    createElement("blockquote", data.quote).parent(texto).id("cita");
+                    createElement("cite", " TAYLOR SWIFT").parent("cita");
+                    createImg("https://freepikpsd.com/wp-content/uploads/2019/10/taylor-swift-png-photos-taylor-swift-png-1024_1365.png", "Taylor").parent(imagen);
+                    selectAll("nav a")[1].addClass("active");
+                } else if (seleccionado == 2) {
+                    let r = floor(random(0, 101));
+                    createElement("blockquote", data[r].quote + " ").parent(texto).id("cita");
+                    createElement("cite", data[r].author).parent("cita");
+                    createImg("http://assets.stickpng.com/images/5a7b6d10abc3d121aba71090.png", "Pitufo Filosofo").parent(imagen);
+                    selectAll("nav a")[2].addClass("active");
+                } else if (seleccionado == 3) {
+                    // let d = day();
+                    // Antes del createP, suma un createImg()
+                    // Revisa como hacerlo en https://p5js.org/es/reference/
+                    createImg(data.hdurl,data.explanation).parent(imagen);
+                    createP(data.explanation).parent(texto);
+                    selectAll("nav a")[3].addClass("active");
+                } else {
+                    createP(data).parent(texto);
+                }
+            }
+        </script>
+    </body>
+</html>
